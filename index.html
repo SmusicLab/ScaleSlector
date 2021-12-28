@@ -1,0 +1,284 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="Content-Security-Policy" content="default-src * data: gap: https://ssl.gstatic.com; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
+
+  <script>
+    function hint() {
+      if (document.getElementById("hint").style["display"] == "flex") {
+        document.getElementById("hint").style["display"] = "none";
+      } else {
+        document.getElementById("hint").style["display"] = "flex";
+      }
+    }
+
+    function omikuji() {
+      if (document.getElementById("saisyo").style["display"] == "none") {
+        document.getElementById("saisyo").style["display"] = "block";
+        document.getElementById("kekka").style["display"] = "none";
+        document.getElementById("button").innerHTML = "今日のスケールは？";
+        return;
+      }
+
+      document.getElementById("saisyo").style["display"] = "none";
+      //document.getElementById("kekka").src = "images/" + image_name;
+      document.getElementById("kekka").style["display"] = "flex";
+      document.getElementById("hint").style["display"] = "none";
+      var imgArray = [
+        ["C_dur.png", "F_dur.png", "B_dur.png", "Es_dur.png", "As_dur.png", "Des_dur.png", "Fis_dur.png", "H_dur.png", "E_dur.png", "A_dur.png", "D_dur.png", "G_dur.png"],
+        ["C_moll1.png", "F_moll1.png", "B_moll1.png", "Es_moll1.png", "As_moll1.png", "Des_moll1.png", "Fis_moll1.png", "H_moll1.png", "E_moll1.png", "A_moll1.png", "D_moll1.png", "G_moll1.png"],
+        ["C_moll2.png", "F_moll2.png", "B_moll2.png", "Es_moll2.png", "As_moll2.png", "Des_moll2.png", "Fis_moll2.png", "H_moll2.png", "E_moll2.png", "A_moll2.png", "D_moll2.png", "G_moll2.png"],
+        ["C_moll3.png", "F_moll3.png", "B_moll3.png", "Es_moll3.png", "As_moll3.png", "Des_moll3.png", "Fis_moll3.png", "H_moll3.png", "E_moll3.png", "A_moll3.png", "D_moll3.png", "G_moll3.png"]
+      ];
+
+
+      var dice1 = Math.floor(Math.random() * 12);
+      var dice2 = Math.floor(Math.random() * 4);
+      // var image_name;
+      // if (dice == 0) {
+      //     image_name = "omikuji-daikichi.png";
+      // } else if  (dice == 1) {
+      //     image_name = "omikuji-chuukichi.png";
+      // } else {
+      //     image_name = "omikuji-hei.png";
+      // }
+      var key = "C";
+      switch (dice1) {
+        case 0:
+          key = "C";
+          break;
+        case 1:
+          key = "F";
+          break;
+        case 2:
+          key = "B";
+          break;
+        case 3:
+          key = "Es";
+          break;
+        case 4:
+          key = "As";
+          break;
+        case 5:
+          key = "Des";
+          break;
+        case 6:
+          key = "Fis";
+          break;
+        case 7:
+          key = "H";
+          break;
+        case 8:
+          key = "E";
+          break;
+        case 9:
+          key = "A";
+          break;
+        case 10:
+          key = "D";
+          break;
+        default:
+          key = "G";
+          break;
+      }
+
+      var scale = "Major";
+      switch (dice2) {
+        case 0:
+          scale = "Major";
+          break;
+        case 1:
+          scale = "Natual Minor";
+          break;
+        case 2:
+          scale = "Harmonic Minor";
+          break;
+        default:
+          scale = "Melodic Minor";
+          break;
+      }
+      document.getElementById("key").innerHTML = key;
+      document.getElementById("scale").innerHTML = scale;
+      document.getElementById("button").innerHTML = "もう一回練習するぞ！";
+      document.getElementById("inC").src = "images/" + imgArray[dice2][dice1];
+      var inB = dice1 - 2;
+      if (inB < 0) {
+        inB = 12 + inB;
+      }
+      var inEs = dice1 - 3;
+      if (inEs < 0) {
+        inEs = 12 + inEs;
+      }
+      var inF = dice1 - 1;
+      if (inF < 0) {
+        inF = 12 + inF;
+      }
+      var inAs = dice1 + 1;
+      if (inAs > 11) {
+        inAs = 12 - inAs;
+      }
+
+      document.getElementById("inB").src = "images/" + imgArray[dice2][inB];
+      document.getElementById("inEs").src = "images/" + imgArray[dice2][inEs];
+      document.getElementById("inF").src = "images/" + imgArray[dice2][inF];
+     // document.getElementById("inAs").src = "images/" + imgArray[dice2][inAs];
+
+    }
+  </script>
+
+  <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: YuGothic, "游ゴシック体", "Yu Gothic", "ヒラギノ角ゴ Pro", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
+      letter-spacing: .025em;
+      line-height: 1.8;
+      text-align: center;
+    }
+    
+    .bg_pattern {
+      display: flex;
+      flex-direction: column;
+      width: 100vw;
+      height: 100vh;
+      background-color: #ffffff;
+    }
+    
+    .Polka {
+      background-image: radial-gradient(#ffcccc 2px, #ffffff 2px);
+      background-size: 20px 20px;
+    }
+
+    main{
+      flex-grow: 1;
+      display:flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 80%;
+      width: 100%;
+    }
+    footer {
+      height: 20%;
+    }
+
+    #saisyo {
+      max-width: 90%;
+      max-height: 90%;
+      display: block;
+      margin: 0 auto;
+    }
+
+    #kekka{
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 90%;
+      height: 90%;
+    }
+
+    .section {
+	    color: #FFF;
+	    text-shadow: 
+	    	0 0 0.05em #F06292,
+		    0 0 0.10em #F06292,
+		    0 0 0.15em #F06292,
+		    0 0 0.30em #F06292;
+	      filter: saturate(80%);
+      background:#fcfcfc;
+      width: 80%;
+      padding: 10px;
+      justify-content: center;
+      align-items: center;
+      border: 10px double #222222;
+      font-size: 36px;
+      font-weight:bold;
+      text-decoration: none;
+      text-align: center;
+    } 
+    #hintbutton {
+      margin: 0;
+      font-size: 18px;
+      display: inline-block;
+      padding: 0.4em 1em 0.2em;
+      color: #ffffff;
+      border: #222222 1px;
+      border-radius: 0px 0px 10px 10px;
+      background-color: #222222;
+      cursor: pointer;
+    }
+
+    #hint {
+      border: 2px #222222 solid;
+      flex-grow: 1;
+      padding: 10px;
+      display: flex;
+      align-items: flex-start;
+      flex-direction: column;
+      height: auto;
+      overflow: auto;
+      width: 80%;
+      background-color: #ffffff;
+      justify-content: center;
+      align-items: center;
+      text-align: right;
+      border-radius:0px 0px 10px 10px;
+    }
+    
+    #hint img {
+      width: 80%;
+      display: inline;
+      vertical-align: middle;
+    }
+    
+    #button {
+      font-size: 18px;
+      display: inline-block;
+      text-align: right;
+      padding: 0.4em 1em 0.2em;
+      color: #ffffff;
+      border: #ffffff dashed 1px;
+      box-shadow: 0 0 0 0.2em #ff99cc;
+      border-radius: 2.5px;
+      background-color: #ff99cc;
+      cursor: pointer;
+    }
+    
+    
+  </style>
+</head>
+
+<body>
+  <div class="bg_pattern Polka">
+    <main>
+      <img id="saisyo" src="images/conductor.png" />
+      <div id="kekka" style="display:none;">
+        
+        <div class="section">
+          <div id="key">C</div>
+          <div id="scale">Major</div>
+        </div>
+        <div id="hint" display="none">
+          <div><span>in C:</span><img id="inC" src="images/c_dur.png" /></div>
+          <div><span>in B:</span><img id="inB" src="images/d_dur.png" /></div>
+          <div><span>in Es:</span><img id="inEs" src="images/a_dur.png" /></div>
+          <div><span>in F:</span><img id="inF" src="images/g_dur.png" /></div>
+          <!--<div><span>in As:</span><img id="inAs" src="images/e_dur.png" /></div>-->
+        </div>
+        <button id="hintbutton" onclick="hint()">ヒント！</button>
+      </div>
+    </main>
+    <footer>
+      <button id="button" onclick="omikuji()">今日のスケールは？</button>
+    </footer>
+  </div>
+</body>
+
+</html>
