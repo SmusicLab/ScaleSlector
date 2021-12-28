@@ -4,18 +4,52 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <meta http-equiv="Content-Security-Policy" content="default-src * data: gap: https://ssl.gstatic.com; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
-
   <script>
+
+    var dice1;
+    var dice2;
+    var doremiArray = [
+      [0, 2, 4, 5, 7, 9, 11, 12, 12, 11, 9, 7, 5, 4, 2, 0],
+      [0, 2, 3, 5, 7, 8, 10, 12, 12, 10, 8, 7, 5, 3, 2, 0],
+      [0, 2, 3, 5, 7, 8, 11, 12, 12, 11, 8, 7, 5, 3, 2, 0],
+      [0, 2, 3, 5, 7, 9, 11, 12, 12, 10, 8, 7, 5, 3, 2, 0]
+    ];
+
+    var audioContext;
+    var oscillator;
+    const doremi = () => {
+
+      audioContext = new AudioContext();
+      const t0 = audioContext.currentTime;
+      let t = 0;
+
+      var oscillator = audioContext.createOscillator();
+      var gain = audioContext.createGain();
+
+      oscillator.type = "square";//sine, square, sawtooth, triangle, custom
+      doremiArray[dice2].forEach((s) => {
+        const hz = 442 * Math.pow(2, (1 / 12 * (s + ((dice1 * 5) % 12) - 9)));
+        oscillator.frequency.setValueAtTime(hz, t0 + t);
+        gain.gain.setValueAtTime(0.01, t0 + t);
+        t += 1;
+      });
+      oscillator.start(t0);
+      oscillator.stop(t0 + t);
+      oscillator.connect(gain);
+      gain.connect(audioContext.destination);
+    };
+
     function hint() {
       if (document.getElementById("hint").style["display"] == "flex") {
         document.getElementById("hint").style["display"] = "none";
+        doremi();
       } else {
         document.getElementById("hint").style["display"] = "flex";
+        doremi();
       }
     }
 
-    function omikuji() {
+    function scale() {
       if (document.getElementById("saisyo").style["display"] == "none") {
         document.getElementById("saisyo").style["display"] = "block";
         document.getElementById("kekka").style["display"] = "none";
@@ -35,16 +69,9 @@
       ];
 
 
-      var dice1 = Math.floor(Math.random() * 12);
-      var dice2 = Math.floor(Math.random() * 4);
-      // var image_name;
-      // if (dice == 0) {
-      //     image_name = "omikuji-daikichi.png";
-      // } else if  (dice == 1) {
-      //     image_name = "omikuji-chuukichi.png";
-      // } else {
-      //     image_name = "omikuji-hei.png";
-      // }
+      dice1 = Math.floor(Math.random() * 12);
+      dice2 = Math.floor(Math.random() * 4);
+
       var key = "C";
       switch (dice1) {
         case 0:
@@ -124,7 +151,34 @@
       document.getElementById("inB").src = "images/" + imgArray[dice2][inB];
       document.getElementById("inEs").src = "images/" + imgArray[dice2][inEs];
       document.getElementById("inF").src = "images/" + imgArray[dice2][inF];
-     // document.getElementById("inAs").src = "images/" + imgArray[dice2][inAs];
+      // document.getElementById("inAs").src = "images/" + imgArray[dice2][inAs];
+
+      //読み上げ
+      if ('speechSynthesis' in window) {
+        // 発言を設定 (必須)
+        const uttr = new SpeechSynthesisUtterance()
+
+        // テキストを設定 (必須)
+        uttr.text = key;
+        // 言語を設定
+        uttr.lang = "de-DE"
+        // 速度を設定
+        uttr.rate = 1
+        // 高さを設定
+        uttr.pitch = 1
+        // 音量を設定
+        uttr.volume = 1
+
+        // 発言を再生 (必須)
+        window.speechSynthesis.speak(uttr)
+
+        // テキストを設定 (必須)
+        uttr.text = scale;
+        // 言語を設定
+        uttr.lang = "en-US"
+        window.speechSynthesis.speak(uttr)
+      }
+
 
     }
   </script>
@@ -135,14 +189,14 @@
       margin: 0;
       padding: 0;
     }
-    
+
     body {
       font-family: YuGothic, "游ゴシック体", "Yu Gothic", "ヒラギノ角ゴ Pro", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
       letter-spacing: .025em;
       line-height: 1.8;
       text-align: center;
     }
-    
+
     .bg_pattern {
       display: flex;
       flex-direction: column;
@@ -150,21 +204,22 @@
       height: 100vh;
       background-color: #ffffff;
     }
-    
+
     .Polka {
       background-image: radial-gradient(#ffcccc 2px, #ffffff 2px);
       background-size: 20px 20px;
     }
 
-    main{
+    main {
       flex-grow: 1;
-      display:flex;
+      display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       height: 80%;
       width: 100%;
     }
+
     footer {
       height: 20%;
     }
@@ -176,7 +231,7 @@
       margin: 0 auto;
     }
 
-    #kekka{
+    #kekka {
       flex-direction: column;
       justify-content: center;
       align-items: center;
@@ -185,24 +240,25 @@
     }
 
     .section {
-	    color: #FFF;
-	    text-shadow: 
-	    	0 0 0.05em #F06292,
-		    0 0 0.10em #F06292,
-		    0 0 0.15em #F06292,
-		    0 0 0.30em #F06292;
-	      filter: saturate(80%);
-      background:#fcfcfc;
+      color: #FFF;
+      text-shadow:
+        0 0 0.05em #F06292,
+        0 0 0.10em #F06292,
+        0 0 0.15em #F06292,
+        0 0 0.30em #F06292;
+      filter: saturate(80%);
+      background: #fcfcfc;
       width: 80%;
       padding: 10px;
       justify-content: center;
       align-items: center;
       border: 10px double #222222;
       font-size: 36px;
-      font-weight:bold;
+      font-weight: bold;
       text-decoration: none;
       text-align: center;
-    } 
+    }
+
     #hintbutton {
       margin: 0;
       font-size: 18px;
@@ -226,15 +282,15 @@
       width: 80%;
       background-color: #ffffff;
       text-align: right;
-      border-radius:0px 0px 10px 10px;
+      border-radius: 0px 0px 10px 10px;
     }
-    
+
     #hint img {
       width: 80%;
       display: inline;
       vertical-align: middle;
     }
-    
+
     #button {
       font-size: 18px;
       display: inline-block;
@@ -247,8 +303,6 @@
       background-color: #ff99cc;
       cursor: pointer;
     }
-    
-    
   </style>
 </head>
 
@@ -257,7 +311,7 @@
     <main>
       <img id="saisyo" src="images/conductor.png" />
       <div id="kekka" style="display:none;">
-        
+
         <div class="section">
           <div id="key">C</div>
           <div id="scale">Major</div>
@@ -273,7 +327,7 @@
       </div>
     </main>
     <footer>
-      <button id="button" onclick="omikuji()">今日のスケールは？</button>
+      <button id="button" onclick="scale()">今日のスケールは？</button>
     </footer>
   </div>
 </body>
