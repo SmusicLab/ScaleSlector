@@ -15,22 +15,23 @@
       [0, 2, 3, 5, 7, 9, 11, 12, 12, 10, 8, 7, 5, 3, 2, 0]
     ];
 
-    var audioContext;
-    var oscillator;
-    const doremi = () => {
+    let audioContext;
+    let oscillator;
+
+    const playScale = () => {
 
       audioContext = new AudioContext();
       const t0 = audioContext.currentTime;
       let t = 0;
 
-      var oscillator = audioContext.createOscillator();
+      oscillator = audioContext.createOscillator();
       var gain = audioContext.createGain();
 
-      oscillator.type = "square";//sine, square, sawtooth, triangle, custom
+      oscillator.type = "triangle";//sine, square, sawtooth, triangle, custom
       doremiArray[dice2].forEach((s) => {
         const hz = 442 * Math.pow(2, (1 / 12 * (s + ((dice1 * 5) % 12) - 9)));
         oscillator.frequency.setValueAtTime(hz, t0 + t);
-        gain.gain.setValueAtTime(0.01, t0 + t);
+        gain.gain.setValueAtTime(0.5, t0 + t);
         t += 1;
       });
       oscillator.start(t0);
@@ -42,10 +43,10 @@
     function hint() {
       if (document.getElementById("hint").style["display"] == "flex") {
         document.getElementById("hint").style["display"] = "none";
-        doremi();
+        oscillator?.stop();
       } else {
         document.getElementById("hint").style["display"] = "flex";
-        doremi();
+        playScale();
       }
     }
 
@@ -54,130 +55,140 @@
         document.getElementById("saisyo").style["display"] = "block";
         document.getElementById("kekka").style["display"] = "none";
         document.getElementById("button").innerHTML = "今日のスケールは？";
+        oscillator.stop();
         return;
       }
 
-      document.getElementById("saisyo").style["display"] = "none";
-      //document.getElementById("kekka").src = "images/" + image_name;
-      document.getElementById("kekka").style["display"] = "flex";
-      document.getElementById("hint").style["display"] = "none";
-      var imgArray = [
-        ["C_dur.png", "F_dur.png", "B_dur.png", "Es_dur.png", "As_dur.png", "Des_dur.png", "Fis_dur.png", "H_dur.png", "E_dur.png", "A_dur.png", "D_dur.png", "G_dur.png"],
-        ["C_moll1.png", "F_moll1.png", "B_moll1.png", "Es_moll1.png", "As_moll1.png", "Des_moll1.png", "Fis_moll1.png", "H_moll1.png", "E_moll1.png", "A_moll1.png", "D_moll1.png", "G_moll1.png"],
-        ["C_moll2.png", "F_moll2.png", "B_moll2.png", "Es_moll2.png", "As_moll2.png", "Des_moll2.png", "Fis_moll2.png", "H_moll2.png", "E_moll2.png", "A_moll2.png", "D_moll2.png", "G_moll2.png"],
-        ["C_moll3.png", "F_moll3.png", "B_moll3.png", "Es_moll3.png", "As_moll3.png", "Des_moll3.png", "Fis_moll3.png", "H_moll3.png", "E_moll3.png", "A_moll3.png", "D_moll3.png", "G_moll3.png"]
-      ];
+      var audio = new Audio('sound.mp3');
+      audio.currentTime = 4;
+      audio.play();
+      document.getElementById("button").disabled = true;
+      audio.addEventListener("ended", function () {
+
+        document.getElementById("button").disabled = false;
+        
+        document.getElementById("saisyo").style["display"] = "none";
+        document.getElementById("kekka").style["display"] = "flex";
+        document.getElementById("hint").style["display"] = "none";
+        var imgArray = [
+          ["C_dur.png", "F_dur.png", "B_dur.png", "Es_dur.png", "As_dur.png", "Des_dur.png", "Fis_dur.png", "H_dur.png", "E_dur.png", "A_dur.png", "D_dur.png", "G_dur.png"],
+          ["C_moll1.png", "F_moll1.png", "B_moll1.png", "Es_moll1.png", "As_moll1.png", "Des_moll1.png", "Fis_moll1.png", "H_moll1.png", "E_moll1.png", "A_moll1.png", "D_moll1.png", "G_moll1.png"],
+          ["C_moll2.png", "F_moll2.png", "B_moll2.png", "Es_moll2.png", "As_moll2.png", "Des_moll2.png", "Fis_moll2.png", "H_moll2.png", "E_moll2.png", "A_moll2.png", "D_moll2.png", "G_moll2.png"],
+          ["C_moll3.png", "F_moll3.png", "B_moll3.png", "Es_moll3.png", "As_moll3.png", "Des_moll3.png", "Fis_moll3.png", "H_moll3.png", "E_moll3.png", "A_moll3.png", "D_moll3.png", "G_moll3.png"]
+        ];
 
 
-      dice1 = Math.floor(Math.random() * 12);
-      dice2 = Math.floor(Math.random() * 4);
+        dice1 = Math.floor(Math.random() * 12);
+        dice2 = Math.floor(Math.random() * 4);
 
-      var key = "C";
-      switch (dice1) {
-        case 0:
-          key = "C";
-          break;
-        case 1:
-          key = "F";
-          break;
-        case 2:
-          key = "B";
-          break;
-        case 3:
-          key = "Es";
-          break;
-        case 4:
-          key = "As";
-          break;
-        case 5:
-          key = "Des";
-          break;
-        case 6:
-          key = "Fis";
-          break;
-        case 7:
-          key = "H";
-          break;
-        case 8:
-          key = "E";
-          break;
-        case 9:
-          key = "A";
-          break;
-        case 10:
-          key = "D";
-          break;
-        default:
-          key = "G";
-          break;
-      }
+        var key = "C";
+        switch (dice1) {
+          case 0:
+            key = "C";
+            break;
+          case 1:
+            key = "F";
+            break;
+          case 2:
+            key = "B";
+            break;
+          case 3:
+            key = "Es";
+            break;
+          case 4:
+            key = "As";
+            break;
+          case 5:
+            key = "Des";
+            break;
+          case 6:
+            key = "Fis";
+            break;
+          case 7:
+            key = "H";
+            break;
+          case 8:
+            key = "E";
+            break;
+          case 9:
+            key = "A";
+            break;
+          case 10:
+            key = "D";
+            break;
+          default:
+            key = "G";
+            break;
+        }
 
-      var scale = "Major";
-      switch (dice2) {
-        case 0:
-          scale = "Major";
-          break;
-        case 1:
-          scale = "Natural Minor";
-          break;
-        case 2:
-          scale = "Harmonic Minor";
-          break;
-        default:
-          scale = "Melodic Minor";
-          break;
-      }
-      document.getElementById("key").innerHTML = key;
-      document.getElementById("scale").innerHTML = scale;
-      document.getElementById("button").innerHTML = "もう一回練習するぞ！";
-      document.getElementById("inC").src = "images/" + imgArray[dice2][dice1];
-      var inB = dice1 - 2;
-      if (inB < 0) {
-        inB = 12 + inB;
-      }
-      var inEs = dice1 - 3;
-      if (inEs < 0) {
-        inEs = 12 + inEs;
-      }
-      var inF = dice1 - 1;
-      if (inF < 0) {
-        inF = 12 + inF;
-      }
-      var inAs = dice1 + 1;
-      if (inAs > 11) {
-        inAs = 12 - inAs;
-      }
+        var scale = "Major";
+        switch (dice2) {
+          case 0:
+            scale = "Major";
+            break;
+          case 1:
+            scale = "Natural Minor";
+            break;
+          case 2:
+            scale = "Harmonic Minor";
+            break;
+          default:
+            scale = "Melodic Minor";
+            break;
+        }
+        document.getElementById("key").innerHTML = key;
+        document.getElementById("scale").innerHTML = scale;
+        document.getElementById("button").innerHTML = "もう一回練習するぞ！";
+        document.getElementById("inC").src = "images/" + imgArray[dice2][dice1];
+        var inB = dice1 - 2;
+        if (inB < 0) {
+          inB = 12 + inB;
+        }
+        var inEs = dice1 - 3;
+        if (inEs < 0) {
+          inEs = 12 + inEs;
+        }
+        var inF = dice1 - 1;
+        if (inF < 0) {
+          inF = 12 + inF;
+        }
+        var inAs = dice1 + 1;
+        if (inAs > 11) {
+          inAs = 12 - inAs;
+        }
 
-      document.getElementById("inB").src = "images/" + imgArray[dice2][inB];
-      document.getElementById("inEs").src = "images/" + imgArray[dice2][inEs];
-      document.getElementById("inF").src = "images/" + imgArray[dice2][inF];
-      // document.getElementById("inAs").src = "images/" + imgArray[dice2][inAs];
+        document.getElementById("inB").src = "images/" + imgArray[dice2][inB];
+        document.getElementById("inEs").src = "images/" + imgArray[dice2][inEs];
+        document.getElementById("inF").src = "images/" + imgArray[dice2][inF];
+        // document.getElementById("inAs").src = "images/" + imgArray[dice2][inAs];
 
-      //読み上げ
-      if ('speechSynthesis' in window) {
-        // 発言を設定 (必須)
-        const uttr = new SpeechSynthesisUtterance()
+        //読み上げ
+        if ('speechSynthesis' in window) {
+          // 発言を設定 (必須)
+          const uttr = new SpeechSynthesisUtterance()
 
-        // テキストを設定 (必須)
-        uttr.text = key;
-        // 言語を設定
-        uttr.lang = "de-DE"
-        // 速度を設定
-        uttr.rate = 1
-        // 高さを設定
-        uttr.pitch = 1
-        // 音量を設定
-        uttr.volume = 1
+          // テキストを設定 (必須)
+          uttr.text = key;
+          // 言語を設定
+          uttr.lang = "de-DE"
+          // 速度を設定
+          uttr.rate = 1
+          // 高さを設定
+          uttr.pitch = 1
+          // 音量を設定
+          uttr.volume = 1
 
-        // 発言を再生 (必須)
-        window.speechSynthesis.speak(uttr)
+          // 発言を再生 (必須)
+          window.speechSynthesis.speak(uttr)
 
-        // テキストを設定 (必須)
-        uttr.text = scale;
-        // 言語を設定
-        uttr.lang = "en-US"
-        window.speechSynthesis.speak(uttr)
-      }
+          // テキストを設定 (必須)
+          uttr.text = scale;
+          // 言語を設定
+          uttr.lang = "en-US"
+          window.speechSynthesis.speak(uttr)
+        }
+
+      }, false);
 
 
     }
@@ -303,6 +314,13 @@
       background-color: #ff99cc;
       cursor: pointer;
     }
+
+    #button:disabled
+    {
+      box-shadow: 0 0 0 0.2em #999999;
+      background-color: #999999;
+      cursor:default;
+    }
   </style>
 </head>
 
@@ -323,7 +341,7 @@
           <div><span>in F:</span><img id="inF" src="images/g_dur.png" /></div>
           <!--<div><span>in As:</span><img id="inAs" src="images/e_dur.png" /></div>-->
         </div>
-        <button id="hintbutton" onclick="hint()">ヒント！</button>
+        <button id="hintbutton" onclick="hint()">ヒント♪</button>
       </div>
     </main>
     <footer>
