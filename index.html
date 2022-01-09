@@ -6,13 +6,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <script>
 
-    var dice1;
-    var dice2;
+    var keyNo;
+    var scaleNo;
+
     var doremiArray = [
       [0, 2, 4, 5, 7, 9, 11, 12, 12, 11, 9, 7, 5, 4, 2, 0],
       [0, 2, 3, 5, 7, 8, 10, 12, 12, 10, 8, 7, 5, 3, 2, 0],
       [0, 2, 3, 5, 7, 8, 11, 12, 12, 11, 8, 7, 5, 3, 2, 0],
       [0, 2, 3, 5, 7, 9, 11, 12, 12, 10, 8, 7, 5, 3, 2, 0]
+    ];
+
+    var imgArray = [
+      ["C_dur.png", "F_dur.png", "B_dur.png", "Es_dur.png", "As_dur.png", "Des_dur.png", "Fis_dur.png", "H_dur.png", "E_dur.png", "A_dur.png", "D_dur.png", "G_dur.png"],
+      ["C_moll1.png", "F_moll1.png", "B_moll1.png", "Es_moll1.png", "As_moll1.png", "Des_moll1.png", "Fis_moll1.png", "H_moll1.png", "E_moll1.png", "A_moll1.png", "D_moll1.png", "G_moll1.png"],
+      ["C_moll2.png", "F_moll2.png", "B_moll2.png", "Es_moll2.png", "As_moll2.png", "Des_moll2.png", "Fis_moll2.png", "H_moll2.png", "E_moll2.png", "A_moll2.png", "D_moll2.png", "G_moll2.png"],
+      ["C_moll3.png", "F_moll3.png", "B_moll3.png", "Es_moll3.png", "As_moll3.png", "Des_moll3.png", "Fis_moll3.png", "H_moll3.png", "E_moll3.png", "A_moll3.png", "D_moll3.png", "G_moll3.png"]
     ];
 
     let audioContext;
@@ -28,8 +36,8 @@
       var gain = audioContext.createGain();
 
       oscillator.type = "triangle";//sine, square, sawtooth, triangle, custom
-      doremiArray[dice2].forEach((s) => {
-        const hz = 442 * Math.pow(2, (1 / 12 * (s + ((dice1 * 5) % 12) - 9)));
+      doremiArray[scaleNo].forEach((s) => {
+        const hz = 442 * Math.pow(2, (1 / 12 * (s + ((keyNo * 5) % 12) - 9)));
         oscillator.frequency.setValueAtTime(hz, t0 + t);
         gain.gain.setValueAtTime(0.5, t0 + t);
         t += 1;
@@ -50,145 +58,201 @@
       }
     }
 
-    function scale() {
-      if (document.getElementById("saisyo").style["display"] == "none") {
-        document.getElementById("saisyo").style["display"] = "block";
-        document.getElementById("kekka").style["display"] = "none";
-        document.getElementById("button").innerHTML = "今日のスケールは？";
-        oscillator.stop();
-        return;
-      }
+    function back() {
+      document.getElementById("cat").style["display"] = "block";
+      document.getElementById("result").style["display"] = "none";
+      document.getElementById("buttonBack").style["display"] = "none";
+      document.getElementById("buttonSelect").style["display"] = "inline-block";
+
+      oscillator?.stop();
+
+    }
+    function scaleRandom() {
+
+      back();
+
+      document.getElementById("cat").classList.add('is-animated');
+
+      oscillator?.stop();
 
       var audio = new Audio('sound.mp3');
-      audio.currentTime = 4;
       audio.play();
-      document.getElementById("button").disabled = true;
+      document.getElementById("buttonRandom").disabled = true;
+      document.getElementById("buttonSelect").disabled = true;
+
+      document.getElementById("select").style["display"] = "none";
+
+      keyNo = Math.floor(Math.random() * 12);
+      scaleNo = Math.floor(Math.random() * 4);
       audio.addEventListener("ended", function () {
-
-        document.getElementById("button").disabled = false;
-        
-        document.getElementById("saisyo").style["display"] = "none";
-        document.getElementById("kekka").style["display"] = "flex";
-        document.getElementById("hint").style["display"] = "none";
-        var imgArray = [
-          ["C_dur.png", "F_dur.png", "B_dur.png", "Es_dur.png", "As_dur.png", "Des_dur.png", "Fis_dur.png", "H_dur.png", "E_dur.png", "A_dur.png", "D_dur.png", "G_dur.png"],
-          ["C_moll1.png", "F_moll1.png", "B_moll1.png", "Es_moll1.png", "As_moll1.png", "Des_moll1.png", "Fis_moll1.png", "H_moll1.png", "E_moll1.png", "A_moll1.png", "D_moll1.png", "G_moll1.png"],
-          ["C_moll2.png", "F_moll2.png", "B_moll2.png", "Es_moll2.png", "As_moll2.png", "Des_moll2.png", "Fis_moll2.png", "H_moll2.png", "E_moll2.png", "A_moll2.png", "D_moll2.png", "G_moll2.png"],
-          ["C_moll3.png", "F_moll3.png", "B_moll3.png", "Es_moll3.png", "As_moll3.png", "Des_moll3.png", "Fis_moll3.png", "H_moll3.png", "E_moll3.png", "A_moll3.png", "D_moll3.png", "G_moll3.png"]
-        ];
+        document.getElementById("cat").classList.remove('is-animated');
+        document.getElementById("buttonBack").style["display"] = "inline-block";
+        document.getElementById("buttonSelect").disabled = false;
+        document.getElementById("buttonRandom").disabled = false;
 
 
-        dice1 = Math.floor(Math.random() * 12);
-        dice2 = Math.floor(Math.random() * 4);
-
-        var key = "C";
-        switch (dice1) {
-          case 0:
-            key = "C";
-            break;
-          case 1:
-            key = "F";
-            break;
-          case 2:
-            key = "B";
-            break;
-          case 3:
-            key = "Es";
-            break;
-          case 4:
-            key = "As";
-            break;
-          case 5:
-            key = "Des";
-            break;
-          case 6:
-            key = "Fis";
-            break;
-          case 7:
-            key = "H";
-            break;
-          case 8:
-            key = "E";
-            break;
-          case 9:
-            key = "A";
-            break;
-          case 10:
-            key = "D";
-            break;
-          default:
-            key = "G";
-            break;
-        }
-
-        var scale = "Major";
-        switch (dice2) {
-          case 0:
-            scale = "Major";
-            break;
-          case 1:
-            scale = "Natural Minor";
-            break;
-          case 2:
-            scale = "Harmonic Minor";
-            break;
-          default:
-            scale = "Melodic Minor";
-            break;
-        }
-        document.getElementById("key").innerHTML = key;
-        document.getElementById("scale").innerHTML = scale;
-        document.getElementById("button").innerHTML = "もう一回練習するぞ！";
-        document.getElementById("inC").src = "images/" + imgArray[dice2][dice1];
-        var inB = dice1 - 2;
-        if (inB < 0) {
-          inB = 12 + inB;
-        }
-        var inEs = dice1 - 3;
-        if (inEs < 0) {
-          inEs = 12 + inEs;
-        }
-        var inF = dice1 - 1;
-        if (inF < 0) {
-          inF = 12 + inF;
-        }
-        var inAs = dice1 + 1;
-        if (inAs > 11) {
-          inAs = 12 - inAs;
-        }
-
-        document.getElementById("inB").src = "images/" + imgArray[dice2][inB];
-        document.getElementById("inEs").src = "images/" + imgArray[dice2][inEs];
-        document.getElementById("inF").src = "images/" + imgArray[dice2][inF];
-        // document.getElementById("inAs").src = "images/" + imgArray[dice2][inAs];
-
-        //読み上げ
-        if ('speechSynthesis' in window) {
-          // 発言を設定 (必須)
-          const uttr = new SpeechSynthesisUtterance()
-
-          // テキストを設定 (必須)
-          uttr.text = key;
-          // 言語を設定
-          uttr.lang = "de-DE"
-          // 速度を設定
-          uttr.rate = 1
-          // 高さを設定
-          uttr.pitch = 1
-          // 音量を設定
-          uttr.volume = 1
-
-          // 発言を再生 (必須)
-          window.speechSynthesis.speak(uttr)
-
-          // テキストを設定 (必須)
-          uttr.text = scale;
-          // 言語を設定
-          uttr.lang = "en-US"
-          window.speechSynthesis.speak(uttr)
-        }
+        scale();
 
       }, false);
+
+    }
+
+    function scaleSelect() {
+
+      oscillator?.stop();
+
+      document.getElementById("cat").style["display"] = "none";
+      document.getElementById("result").style["display"] = "none";
+      document.getElementById("hint").style["display"] = "none";
+      document.getElementById("select").style["display"] = "flex";
+      document.getElementById("buttonSelect").style["display"] = "none";
+      document.getElementById("buttonBack").style["display"] = "inline-block";
+
+
+    }
+    function scaleOK() {
+
+      oscillator?.stop();
+
+      keyNo = parseInt(document.getElementById("key").value, 10);
+      scaleNo = parseInt(document.getElementById("scale").value, 10);
+
+      scale();
+    }
+    function scale() {
+
+
+      document.getElementById("cat").style["display"] = "none";
+      document.getElementById("result").style["display"] = "flex";
+      document.getElementById("hint").style["display"] = "none";
+
+
+
+      var displayText;
+      var speechText;
+      switch (keyNo) {
+        case 0:
+          displayText = "C";
+          speechText = "チェー";
+          break;
+        case 1:
+          displayText = "F";
+          speechText = "エフ";
+          break;
+        case 2:
+          displayText = "B";
+          speechText = "ベー";
+          break;
+        case 3:
+          displayText = "Es";
+          speechText = "エス";
+          break;
+        case 4:
+          displayText = "As";
+          speechText = "アス";
+          break;
+        case 5:
+          displayText = "Des";
+          speechText = "デス";
+          break;
+        case 6:
+          displayText = "Fis";
+          speechText = "フィス";
+          break;
+        case 7:
+          displayText = "H";
+          speechText = "ハー";
+          break;
+        case 8:
+          displayText = "E";
+          speechText = "エー";
+          break;
+        case 9:
+          displayText = "A";
+          speechText = "アー";
+          break;
+        case 10:
+          displayText = "D";
+          speechText = "デー";
+          break;
+        default:
+          displayText = "G";
+          speechText = "ゲー";
+          break;
+      }
+      displayText = displayText + " ";
+      speechText = speechText + " ";
+      switch (scaleNo) {
+        case 0:
+          displayText = displayText + "dur";
+          speechText = speechText + "ドュアー";
+          break;
+        case 1:
+          displayText = displayText + "moll<br>(Natural Minor)";
+          speechText = speechText + "モール　ナチュラルマイナー";
+          break;
+        case 2:
+          displayText = displayText + "moll<br>(Harmonic Minor)";
+          speechText = speechText + "モール　ハーモニックマイナー";
+          break;
+        default:
+          displayText = displayText + "moll<br>(Melodic Minor)";
+          speechText = speechText + "モール　メロディックマイナー";
+          break;
+      }
+      document.getElementById("resultText").innerHTML = displayText;
+      document.getElementById("inC").src = "images/" + imgArray[scaleNo][keyNo];
+
+      var inB = keyNo - 2;
+      if (inB < 0) {
+        inB = 12 + inB;
+      }
+      var inEs = keyNo - 3;
+      if (inEs < 0) {
+        inEs = 12 + inEs;
+      }
+      var inF = keyNo - 1;
+      if (inF < 0) {
+        inF = 12 + inF;
+      }
+      /*
+      var inAs = keyNo + 1;
+      if (inAs > 11) {
+        inAs = 12 - inAs;
+      }
+      */
+      document.getElementById("inB").src = "images/" + imgArray[scaleNo][inB];
+      document.getElementById("inEs").src = "images/" + imgArray[scaleNo][inEs];
+      document.getElementById("inF").src = "images/" + imgArray[scaleNo][inF];
+      // document.getElementById("inAs").src = "images/" + imgArray[scaleNo][inAs];
+
+      //読み上げ
+      if ('speechSynthesis' in window) {
+        // 発言を設定 (必須)
+        const uttr = new SpeechSynthesisUtterance()
+
+        // テキストを設定 (必須)
+        //uttr.text = key;
+        uttr.text = speechText;
+        // 言語を設定
+        //uttr.lang = "de-DE"
+        // 速度を設定
+        uttr.rate = 1
+        // 高さを設定
+        uttr.pitch = 1
+        // 音量を設定
+        uttr.volume = 1
+
+        // 発言を再生 (必須)
+        window.speechSynthesis.speak(uttr)
+        // テキストを設定 (必須)
+        //uttr.text = scale;
+        // 言語を設定
+        //uttr.lang = "en-US"
+        //window.speechSynthesis.speak(uttr)
+      }
+
+
 
 
     }
@@ -221,13 +285,21 @@
       background-size: 20px 20px;
     }
 
+    header {
+      height: auto;
+      font-size: 2em;
+      font-weight: bold;
+      text-shadow: #fff 2px 0, #fff -2px 0, #fff 0 -2px, #fff 0 2px, #fff 2px 2px, #fff -2px 2px, #fff 2px -2px, #fff -2px -2px, #fff 1px 2px, #fff -1px 2px, #fff 1px -2px, #fff -1px -2px, #fff 2px 1px, #fff -2px 1px, #fff 2px -1px, #fff -2px -1px, rgba(0, 0, 0, .5) 3px 3px 3px;
+    }
+
     main {
       flex-grow: 1;
+      flex-basis: 0;
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
       width: 100%;
+      position: relative;
     }
 
     footer {
@@ -235,22 +307,26 @@
       padding: 2em;
     }
 
-    #saisyo {
-      max-width: 90%;
-      max-height: 90%;
-      display: block;
-      margin: 0 auto;
-    }
-
-    #kekka {
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      width: 90%;
+    #cat {
+      position: absolute;
       height: 90%;
     }
 
-    .section {
+    #select {
+      display: block;
+      align-items: center;
+      margin: 10px;
+    }
+
+    #result {
+      flex-grow: 1;
+      flex-direction: column;
+      align-items: center;
+      margin: 10px;
+      width: 90%;
+    }
+
+    #resultText {
       color: #FFF;
       text-shadow:
         0 0 0.05em #F06292,
@@ -302,11 +378,12 @@
       vertical-align: middle;
     }
 
-    #button {
+    .button {
       font-size: 18px;
       display: inline-block;
       text-align: right;
       padding: 0.4em 1em 0.2em;
+      margin: 2px;
       color: #ffffff;
       border: #ffffff dashed 1px;
       box-shadow: 0 0 0 0.2em #ff99cc;
@@ -315,39 +392,74 @@
       cursor: pointer;
     }
 
-    #button:disabled
-    {
+    .button:disabled {
       box-shadow: 0 0 0 0.2em #999999;
       background-color: #999999;
-      cursor:default;
+      cursor: default;
+    }
+
+    .is-animated {
+      animation: loading 0.5s infinite alternate;
+    }
+
+    @keyframes loading {
+      0% {
+        transform: rotate(-90deg);
+      }
+
+      100% {
+        transform: rotate(90deg);
+      }
     }
   </style>
 </head>
 
-<body>
-  <div class="bg_pattern Polka">
-    <main>
-      <img id="saisyo" src="images/conductor.png" />
-      <div id="kekka" style="display:none;">
-
-        <div class="section">
-          <div id="key">C</div>
-          <div id="scale">Major</div>
-        </div>
-        <div id="hint" display="none">
-          <div><span>in C:</span><img id="inC" src="images/c_dur.png" /></div>
-          <div><span>in B:</span><img id="inB" src="images/d_dur.png" /></div>
-          <div><span>in Es:</span><img id="inEs" src="images/a_dur.png" /></div>
-          <div><span>in F:</span><img id="inF" src="images/g_dur.png" /></div>
-          <!--<div><span>in As:</span><img id="inAs" src="images/e_dur.png" /></div>-->
-        </div>
-        <button id="hintbutton" onclick="hint()">ヒント♪</button>
+<body class="bg_pattern Polka">
+  <header>スケール練習しよう！</header>
+  <main>
+    <img id="cat" src="images/conductor.png" />
+    <div id="select" style="display:none;">
+      <select required id="key">
+        <option value="0">C</option>
+        <option value="1">F</option>
+        <option value="2">B</option>
+        <option value="3">Es</option>
+        <option value="4">As</option>
+        <option value="5">Des</option>
+        <option value="6">Fis</option>
+        <option value="7">H</option>
+        <option value="8">E</option>
+        <option value="9">A</option>
+        <option value="10">D</option>
+        <option value="11">G</option>
+      </select>
+      <select required id="scale">
+        <option value="0">dur</option>
+        <option value="1">moll (Natural Minor)</option>
+        <option value="2">moll (Harmonic Minor)</option>
+        <option value="3">moll (Melodic Minor)</option>
+      </select>
+      <button id="buttonOK" onclick="scaleOK()">これに決めた！</button>
+    </div>
+    <div id="result" style="display:none;">
+      <div id="resultText">
       </div>
-    </main>
-    <footer>
-      <button id="button" onclick="scale()">今日のスケールは？</button>
-    </footer>
-  </div>
+      <div id="hint" style="display:none;">
+        <div><span>in C:</span><img id="inC" src="images/c_dur.png" /></div>
+        <div><span>in B:</span><img id="inB" src="images/d_dur.png" /></div>
+        <div><span>in Es:</span><img id="inEs" src="images/a_dur.png" /></div>
+        <div><span>in F:</span><img id="inF" src="images/g_dur.png" /></div>
+        <!--<div><span>in As:</span><img id="inAs" src="images/e_dur.png" /></div>-->
+      </div>
+      <button id="hintbutton" onclick="hint()">ヒント♪</button>
+    </div>
+
+  </main>
+  <footer>
+    <button id="buttonRandom" onclick="scaleRandom()" class="button">運に任せる</button>
+    <button id="buttonSelect" onclick="scaleSelect()" class="button">自分で選ぶ</button>
+    <button id="buttonBack" onclick="back()" class="button" style="display: none;">戻る</button>
+  </footer>
 </body>
 
 </html>
