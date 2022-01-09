@@ -185,7 +185,7 @@
       switch (scaleNo) {
         case 0:
           displayText = displayText + "dur";
-          speechText = speechText + "ドュアー";
+          speechText = speechText + "ドゥアー";
           break;
         case 1:
           displayText = displayText + "moll<br>(Natural Minor)";
@@ -235,6 +235,8 @@
         //uttr.text = key;
         uttr.text = speechText;
         // 言語を設定
+        uttr.lang = "ja-JP"
+        
         //uttr.lang = "de-DE"
         // 速度を設定
         uttr.rate = 1
