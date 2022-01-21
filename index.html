@@ -1,8 +1,8 @@
 <!DOCTYPE HTML>
-<html>
+<html lang="ja">
 
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" >
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <script>
 
@@ -216,17 +216,12 @@
       if (inF < 0) {
         inF = 12 + inF;
       }
-      /*
-      var inAs = keyNo + 1;
-      if (inAs > 11) {
-        inAs = 12 - inAs;
-      }
-      */
+
+      document.getElementById("inC_f").src = document.getElementById("inC").src.replace(".png", "_f.png");
       document.getElementById("inB").src = "images/" + imgArray[scaleNo][inB];
       document.getElementById("inEs").src = "images/" + imgArray[scaleNo][inEs];
       document.getElementById("inF").src = "images/" + imgArray[scaleNo][inF];
-      // document.getElementById("inAs").src = "images/" + imgArray[scaleNo][inAs];
-
+      
       //読み上げ
       if ('speechSynthesis' in window) {
         // 発言を設定 (必須)
@@ -270,8 +265,6 @@
 
     body {
       font-family: YuGothic, "游ゴシック体", "Yu Gothic", "ヒラギノ角ゴ Pro", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
-      letter-spacing: .025em;
-      line-height: 1.8;
       text-align: center;
     }
 
@@ -281,6 +274,7 @@
       width: 100vw;
       height: 100vh;
       background-color: #ffffff;
+      font-size: 2vw;
     }
 
     .Polka {
@@ -290,7 +284,7 @@
 
     header {
       height: auto;
-      font-size: 2em;
+      font-size: 5vw;
       font-weight: bold;
       text-shadow: #fff 2px 0, #fff -2px 0, #fff 0 -2px, #fff 0 2px, #fff 2px 2px, #fff -2px 2px, #fff 2px -2px, #fff -2px -2px, #fff 1px 2px, #fff -1px 2px, #fff 1px -2px, #fff -1px -2px, #fff 2px 1px, #fff -2px 1px, #fff 2px -1px, #fff -2px -1px, rgba(0, 0, 0, .5) 3px 3px 3px;
     }
@@ -312,7 +306,8 @@
 
     #cat {
       position: absolute;
-      height: 90%;
+      max-width: 100%;
+      max-height: 100%;
     }
 
     #select {
@@ -327,6 +322,8 @@
       align-items: center;
       margin: 10px;
       width: 90%;
+      height: 100%;
+      position:absolute;
     }
 
     #resultText {
@@ -343,15 +340,15 @@
       justify-content: center;
       align-items: center;
       border: 10px double #222222;
-      font-size: 36px;
+      font-size: 5vw;
       font-weight: bold;
       text-decoration: none;
       text-align: center;
+      line-height: 1;
     }
 
     #hintbutton {
       margin: 0;
-      font-size: 18px;
       display: inline-block;
       padding: 0.4em 1em 0.2em;
       color: #ffffff;
@@ -373,6 +370,7 @@
       background-color: #ffffff;
       text-align: right;
       border-radius: 0px 0px 10px 10px;
+      line-height: 3;
     }
 
     #hint img {
@@ -382,7 +380,6 @@
     }
 
     .button {
-      font-size: 18px;
       display: inline-block;
       text-align: right;
       padding: 0.4em 1em 0.2em;
@@ -416,13 +413,13 @@
     }
   </style>
 </head>
-
+<title>スケール練習しよう！</title>
 <body class="bg_pattern Polka">
   <header>スケール練習しよう！</header>
   <main>
-    <img id="cat" src="images/conductor.png" />
+    <img id="cat" src="images/conductor.png" alt="猫の指揮者"/>
     <div id="select" style="display:none;">
-      <select required id="key">
+      <select required id="key" title="keyselect">
         <option value="0">C</option>
         <option value="1">F</option>
         <option value="2">B</option>
@@ -436,7 +433,7 @@
         <option value="10">D</option>
         <option value="11">G</option>
       </select>
-      <select required id="scale">
+      <select required id="scale" title="scaleselect">
         <option value="0">dur</option>
         <option value="1">moll (Natural Minor)</option>
         <option value="2">moll (Harmonic Minor)</option>
@@ -448,11 +445,12 @@
       <div id="resultText">
       </div>
       <div id="hint" style="display:none;">
-        <div><span>in C:</span><img id="inC" src="images/c_dur.png" /></div>
-        <div><span>in B:</span><img id="inB" src="images/d_dur.png" /></div>
-        <div><span>in Es:</span><img id="inEs" src="images/a_dur.png" /></div>
-        <div><span>in F:</span><img id="inF" src="images/g_dur.png" /></div>
-        <!--<div><span>in As:</span><img id="inAs" src="images/e_dur.png" /></div>-->
+        <div><span>in C:</span><img id="inC" src="images/c_dur.png" alt="ヒント画像"/></div>
+        <div><img id="inC_f" src="images/c_dur_f.png" alt="ヒント画像"/></div>
+        <div><span>in B:</span><img id="inB" src="images/d_dur.png" alt="ヒント画像"/></div>
+        <div><span>in Es:</span><img id="inEs" src="images/a_dur.png" alt="ヒント画像"/></div>
+        <div><span>in F:</span><img id="inF" src="images/g_dur.png" alt="ヒント画像"/></div>
+        <div><span>in As:</span><img id="inAs" src="images/e_dur.png" alt="ヒント画像"/></div>
       </div>
       <button id="hintbutton" onclick="hint()">ヒント♪</button>
     </div>
